@@ -26,26 +26,20 @@ where date(p.payment_date) = '2005-07-30' and p.payment_date = r.rental_date and
 
 Перечислите узкие места, оптимизируйте запрос: внесите корректировки по использованию операторов, при необходимости добавьте индексы.
 
-```
-CREATE INDEX payment_date1 on payment (payment_date);
-
-SELECT *
-FROM INFORMATION_SCHEMA.STATISTICS
-WHERE TABLE_NAME='payment';
-                            
-explain analyze
-select  concat(c.last_name, ' ', c.first_name) as name, sum(p.amount)
-from payment p, rental r, customer c, inventory i
-where date(p.payment_date) = '2005-07-30' and p.payment_date = r.rental_date and r.customer_id = c.customer_id and i.inventory_id = r.inventory_id
-group by name
-```
-
 Лишнее это операторы distinct, over (partition by c.customer_id, f.title), также исключить из выборки таблицу film!
 
 
-![Link](https://github.com/akinya1974/Indexes/blob/main/JPG/Задание-2.1.jpg)
+```
+explain analyze
+select  concat(c.last_name, ' ', c.first_name) as name,
+sum(p.amount)
+from payment p, rental r, customer c, inventory i
+where date(p.payment_date) = '2005-07-30' and p.payment_date = r.rental_date and 
+r.customer_id = c.customer_id and i.inventory_id = r.inventory_id
+group by name;
+```
 
-![Link](https://github.com/akinya1974/Indexes/blob/main/JPG/Задание-2.2.jpg)
+![Link](https://github.com/akinya1974/Indexes/blob/main/JPG/Переделка.jpg)
 
 
 ## Задание-3
